@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {executeCommand} from '../action/sendCommand.action';
+import {executeCommand} from '../action/devices.action';
 
 interface InitalState {
   sendCommand: string;

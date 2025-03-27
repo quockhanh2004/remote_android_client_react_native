@@ -5,20 +5,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import messageReducer from './slice/message.slice';
 import deviceReducer from './slice/devices.slice';
+import userReducer from './slice/user.slice';
+import apiMiddleware from './middleware/apiMiddleware';
 
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
 const rootReducer = combineReducers({
   message: messageReducer,
-  device: deviceReducer,
+  devices: deviceReducer,
+  user: userReducer,
 });
 
 let persistConfig: PersistConfig<RootState>;
 persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user', 'setting'],
+  whitelist: ['user'],
   stateReconciler: autoMergeLevel2,
 };
 
@@ -32,7 +35,7 @@ export const store = configureStore({
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
         ignoredPaths: ['register'],
       },
-    }),
+    }).concat(apiMiddleware),
 });
 
 export const persistor = persistStore(store);

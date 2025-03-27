@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL =
-  'https://fcm.googleapis.com/v1/projects/pjmk-5f6c9/messages:send';
+export const BASE_URL = 'https://file.quockhanh020924.id.vn';
 
 const instance = axios.create({
   baseURL: BASE_URL,
