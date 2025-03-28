@@ -4,4 +4,7 @@ export const nav = {
   setting: 'setting',
   deviceDetail: 'deviceDetail',
   contact: 'contact',
+  addDevice: 'addDevice',
+  log: 'log',
+  command: 'command',
 };

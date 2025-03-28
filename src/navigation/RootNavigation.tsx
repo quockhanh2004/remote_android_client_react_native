@@ -9,13 +9,11 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import DeviceDetail from '../screens/DeviceDetail';
 import ContactScreen from '../screens/ContactScreen';
-import {DeviceModel} from '../model/device.model';
+import AddDeviceScreen from '../screens/AddDeviceScreen';
+import LogScreen from '../screens/LogScreen';
+import CommandScreen from '../screens/CommandScreen';
 
 const Stack = createNativeStackNavigator();
-export type RootStackParamList = {
-  DeviceDetail: {device: DeviceModel};
-  Contact: {deviceId: string};
-};
 
 const HomeNavigator = () => {
   return (
@@ -23,6 +21,9 @@ const HomeNavigator = () => {
       <Stack.Screen name={nav.home} component={HomeScreen} />
       <Stack.Screen name={nav.deviceDetail} component={DeviceDetail} />
       <Stack.Screen name={nav.contact} component={ContactScreen} />
+      <Stack.Screen name={nav.addDevice} component={AddDeviceScreen} />
+      <Stack.Screen name={nav.log} component={LogScreen} />
+      <Stack.Screen name={nav.command} component={CommandScreen} />
     </Stack.Navigator>
   );
 };
@@ -37,12 +38,11 @@ const AuthNavigator = () => {
 
 const RootNavigation = () => {
   const isLoggedIn = useSelector((state: RootState) => state.user?.user);
+
   return (
-    <>
-      <NavigationContainer>
-        {isLoggedIn ? <HomeNavigator /> : <AuthNavigator />}
-      </NavigationContainer>
-    </>
+    <NavigationContainer>
+      {isLoggedIn ? <HomeNavigator /> : <AuthNavigator />}
+    </NavigationContainer>
   );
 };
 

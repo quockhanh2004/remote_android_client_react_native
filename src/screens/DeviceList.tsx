@@ -33,7 +33,7 @@ const DeviceList: React.FC<DeviceListProps> = ({devices}) => {
       style={{width: '100%', marginBottom: 10}}
       data={devices}
       inverted={true}
-      keyExtractor={item => item.deviceName} // Thay key bằng unique id
+      keyExtractor={item => item?.id} // Thay key bằng unique id
       renderItem={({item}) => (
         <TouchableOpacity
           onPress={() => handlePressDevice(item)}

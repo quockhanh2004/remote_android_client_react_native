@@ -12,5 +12,14 @@ export const AssetsInit = () => {
     ic_phone: require('../assets/icons/ic_phone.png'),
     ic_hotspot: require('../assets/icons/ic_hotspot.png'),
     ic_backspace: require('../assets/icons/ic_backspace.png'),
+    ic_add: require('../assets/icons/ic_add.png'),
+    ic_cancel: require('../assets/icons/ic_cancel.png'),
+    ic_mute: require('../assets/icons/ic_mute.png'),
+    ic_play_pause: require('../assets/icons/ic_play_pause.png'),
+    ic_stop: require('../assets/icons/ic_stop.png'),
+    ic_volume_up: require('../assets/icons/ic_volume_up.png'),
+    ic_volume_down: require('../assets/icons/ic_volume_down.png'),
+    ic_next_track: require('../assets/icons/ic_next_track.png'),
+    ic_prev_track: require('../assets/icons/ic_prev_track.png'),
   });
 };

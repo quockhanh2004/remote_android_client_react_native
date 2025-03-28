@@ -6,8 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import messageReducer from './slice/message.slice';
 import deviceReducer from './slice/devices.slice';
 import userReducer from './slice/user.slice';
-import apiMiddleware from './middleware/apiMiddleware';
+import messagingReducer from './slice/messaging.slice';
 
+import apiMiddleware from './middleware/apiMiddleware';
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
@@ -15,13 +16,14 @@ const rootReducer = combineReducers({
   message: messageReducer,
   devices: deviceReducer,
   user: userReducer,
+  messaging: messagingReducer,
 });
 
 let persistConfig: PersistConfig<RootState>;
 persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user'],
+  whitelist: ['user', 'devices', 'messaging'],
   stateReconciler: autoMergeLevel2,
 };
 

@@ -10,6 +10,7 @@ import {ColorsInit} from './src/config/colors';
 import RootNavigation from './src/navigation/RootNavigation';
 import {persistor, store} from './src/redux/store';
 import MessageDialog from './src/dialog/MessageDialog';
+import {NotificationService} from './src/services/Notification';
 
 const App = () => {
   // useEffect(() => {
@@ -20,6 +21,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
+        <NotificationService />
         <GestureHandlerRootView>
           <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
           <View useSafeArea flex>

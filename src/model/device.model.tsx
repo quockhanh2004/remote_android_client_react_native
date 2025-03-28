@@ -12,7 +12,7 @@ export interface DeviceModel {
 
 export interface AddDeviceParam {
   deviceName?: string;
-  fcmToken: string;
+  fcmTokenDevice: string;
 }
 
 export interface UpdateDeviceParam extends DeviceModel {

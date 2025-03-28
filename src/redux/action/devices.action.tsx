@@ -60,6 +60,8 @@ export const addDevice = createAsyncThunk(
   'addDevice',
   async (data: AddDeviceParam, thunkApi) => {
     if (!data.deviceName) {
+      console.log(data);
+
       data.deviceName = 'Device';
     }
 
@@ -110,6 +112,26 @@ export const updateDevice = createAsyncThunk(
         `/devices/update-device/${data.deviceId}`,
         body,
       );
+      return response.data;
+    } catch (error: any) {
+      thunkApi.dispatch(
+        setMessage({
+          type: 'error',
+          message: error.response?.data?.message || error.message,
+        }),
+      );
+      thunkApi.rejectWithValue(error.message);
+    }
+  },
+);
+
+export const addMyToken = createAsyncThunk(
+  'addMyToken',
+  async (fcmToken: string, thunkApi) => {
+    try {
+      const response = await instance.patch('/devices/add-my-token', {
+        token: fcmToken,
+      });
       return response.data;
     } catch (error: any) {
       thunkApi.dispatch(

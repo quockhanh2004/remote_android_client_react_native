@@ -13,6 +13,7 @@ import {clearMessage} from '../redux/slice/message.slice';
 import {ScrollView} from 'react-native';
 import {RootState} from '../redux/store';
 import CustomDialog from './CustomDialog';
+import {clearStatus} from '../redux/slice/user.slice';
 
 const MessageDialog = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const MessageDialog = () => {
 
   const handleClearMessage = () => {
     dispatch(clearMessage());
+    dispatch(clearStatus());
   };
   return (
     <CustomDialog

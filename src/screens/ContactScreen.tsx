@@ -29,7 +29,7 @@ interface Contact {
   displayName: string;
   phoneNumbers: {number: string}[];
 }
-  
+
 interface RouteParams {
   deviceId: string;
 }
@@ -208,6 +208,7 @@ const ContactList: React.FC = () => {
                 </TouchableOpacity>
               )
             }
+            keyboardShouldPersistTaps="always"
           />
         </>
       )}

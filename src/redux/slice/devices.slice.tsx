@@ -48,7 +48,10 @@ const deviceSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(addDevice.fulfilled, (state, action: {payload: DeviceModel}) => {
-        state.devices.push(action.payload);
+        if (action.payload) {
+          console.log(action.payload);
+          state.devices.push(action.payload);
+        }
         state.isLoading = false;
       })
       .addCase(addDevice.rejected, state => {
