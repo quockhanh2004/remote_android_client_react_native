@@ -9,6 +9,7 @@ interface MainInputProps {
   placeholder?: string;
   placeholderTextColor?: string;
   isSecure?: boolean;
+  renderRight?: any;
 }
 
 const MainInput = ({
@@ -17,6 +18,7 @@ const MainInput = ({
   placeholder,
   placeholderTextColor,
   isSecure,
+  renderRight,
 }: MainInputProps) => {
   return (
     <InputView
@@ -32,6 +34,7 @@ const MainInput = ({
       placeholderTextColor={placeholderTextColor}
       inputStyle={{color: Colors.grey40, ...Typography.text70BL}}
       style={{paddingLeft: 10}}
+      renderRight={renderRight}
     />
   );
 };

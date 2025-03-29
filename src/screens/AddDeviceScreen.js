@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text} from 'react-native-ui-lib';
+import {Text} from 'react-native-ui-lib';
+import {View} from 'react-native';
 import React, {useRef} from 'react';
 import {
   Camera,
@@ -8,9 +9,12 @@ import {
 } from 'react-native-vision-camera';
 import {nav} from '../navigation/navName';
 import {navigationTo} from './HomeScreen';
+import {useRoute} from '@react-navigation/native';
 
 const AddDeviceScreen = () => {
   const camera = useRef(null);
+  const route = useRoute();
+  const {isUpdate} = route.params;
   const devices = useCameraDevices('wide-angle-camera');
   const device = devices[0];
 
@@ -22,6 +26,7 @@ const AddDeviceScreen = () => {
           from: nav.addDevice,
           data: {
             token: codes[0].value,
+            isUpdate: isUpdate,
           },
         });
       }
@@ -29,10 +34,20 @@ const AddDeviceScreen = () => {
   });
 
   return (
-    <View center flex>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+        gap: 12,
+      }}>
+      <Text color="white" size={24} marginT-20 text60BL>
+        Quét QR FCM Token của thiết bị
+      </Text>
       <Camera
         ref={camera}
-        style={{width: 200, height: 200}}
+        style={{width: 300, height: 300}}
         preview={true}
         isActive={true}
         resizeMode="cover"

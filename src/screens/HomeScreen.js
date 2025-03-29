@@ -6,6 +6,7 @@ import {
   addDevice,
   addMyToken,
   getListDevices,
+  updateDevice,
 } from '../redux/action/devices.action';
 import DeviceList from './DeviceList';
 import MainButton from '../components/MainButton';
@@ -20,6 +21,9 @@ const HomeScreen = () => {
   navigation = useNavigation();
   const route = useRoute();
   const dispatch = useDispatch();
+
+  const [localUpdateDevice, setUpdateDevice] = useState(null);
+  const [visibleUpdateDevice, setVisibleUpdateDevice] = useState(false);
 
   const {devices, isLoading, defaultDevice} = useSelector(
     state => state.devices,
@@ -47,9 +51,14 @@ const HomeScreen = () => {
 
   const handleRegisToken = async () => {
     const token = await getFcmToken();
+
     if (token) {
       dispatch(addMyToken(token));
     }
+  };
+
+  const handleUpdateDevice = device => {
+    dispatch(updateDevice(device));
   };
 
   useEffect(() => {
@@ -62,9 +71,17 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (route.params?.from === nav.addDevice && route.params?.data) {
-      console.log('route.params.data', route.params.data);
+      if (route.params?.data?.isUpdate) {
+        console.log('route.params?.data?.token', route.params?.data?.token);
 
-      setDataAdd(route.params.data);
+        setUpdateDevice({
+          ...localUpdateDevice,
+          fcmTokenDevice: route.params?.data?.token,
+        });
+        setVisibleUpdateDevice(true);
+      } else {
+        setDataAdd(route.params.data);
+      }
 
       if (route.params.data !== undefined) {
         navigation.setParams({data: undefined});
@@ -84,7 +101,13 @@ const HomeScreen = () => {
           />
         </TouchableOpacity>
       </View>
-      <DeviceList devices={devices} />
+      <DeviceList
+        devices={devices}
+        onUpdateDevice={device => {
+          setUpdateDevice(device);
+          setVisibleUpdateDevice(true);
+        }}
+      />
       <MainButton
         onPress={handleReload}
         label={'Reload'}
@@ -97,6 +120,38 @@ const HomeScreen = () => {
         placeholder="Device name"
         placeholder2="Token device"
         onConfirm={handleRequestAddDevice}
+      />
+      <EditTextDialog
+        visible={visibleUpdateDevice}
+        value={localUpdateDevice?.deviceName ?? ''}
+        value2={localUpdateDevice?.fcmTokenDevice}
+        isUpdate={true}
+        onDismiss={() => {
+          setUpdateDevice(null);
+          setVisibleUpdateDevice(false);
+        }}
+        onScanQR={() => {
+          navigationTo(nav.addDevice, {
+            isUpdate: true,
+          });
+          setUpdateDevice({
+            ...localUpdateDevice,
+            fcmTokenDevice: '',
+          });
+          setVisibleUpdateDevice(false);
+        }}
+        label={'Update Device'}
+        isLoading={false}
+        onConfirm={(text, text2) => {
+          if (localUpdateDevice) {
+            handleUpdateDevice({
+              ...localUpdateDevice,
+              deviceName: text,
+              fcmTokenDevice: text2 ? text2 : '',
+            });
+            setUpdateDevice(null);
+          }
+        }}
       />
     </View>
   );

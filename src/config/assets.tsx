@@ -21,5 +21,6 @@ export const AssetsInit = () => {
     ic_volume_down: require('../assets/icons/ic_volume_down.png'),
     ic_next_track: require('../assets/icons/ic_next_track.png'),
     ic_prev_track: require('../assets/icons/ic_prev_track.png'),
+    ic_qr: require('../assets/icons/ic_qr.png'),
   });
 };

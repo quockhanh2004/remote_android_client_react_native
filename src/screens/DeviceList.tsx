@@ -22,9 +22,10 @@ type NavigationProp = StackNavigationProp<
 
 interface DeviceListProps {
   devices: DeviceModel[];
+  onUpdateDevice: (device: DeviceModel) => void;
 }
 
-const DeviceList: React.FC<DeviceListProps> = ({devices}) => {
+const DeviceList: React.FC<DeviceListProps> = ({devices, onUpdateDevice}) => {
   const dispatch = useDispatch<any>();
   const navigation = useNavigation<NavigationProp>();
   const {defaultDevice} = useSelector((state: RootState) => state.devices);
@@ -58,42 +59,45 @@ const DeviceList: React.FC<DeviceListProps> = ({devices}) => {
   };
 
   return (
-    <FlatList
-      style={{width: '100%', marginBottom: 10}}
-      data={devices}
-      inverted={true}
-      keyExtractor={item => item?.id}
-      renderItem={({item}) => (
-        <Drawer
-          rightItems={[
-            {
-              text: 'Xóa',
-              background: Colors.red30,
-              onPress: () => handleRemoveDevice(item),
-            },
-          ]}
-          leftItem={{
-            text: 'Mặc định',
-            background: Colors.green30,
-            onPress: () => handleSetDefault(item),
-          }}>
-          <TouchableOpacity
-            onPress={() => handlePressDevice(item)}
-            style={{
-              padding: 12,
-              borderBottomWidth: 1,
-              borderBlockColor: Colors.grey30,
+    <>
+      <FlatList
+        style={{width: '100%', marginBottom: 10}}
+        data={devices}
+        inverted={true}
+        keyExtractor={item => item?.id}
+        renderItem={({item}) => (
+          <Drawer
+            rightItems={[
+              {
+                text: 'Xóa',
+                background: Colors.red30,
+                onPress: () => handleRemoveDevice(item),
+              },
+            ]}
+            leftItem={{
+              text: 'Mặc định',
+              background: Colors.green30,
+              onPress: () => handleSetDefault(item),
             }}>
-            <Text text70 white>
-              {item.deviceName}
-            </Text>
-            <Text text70 white>
-              {item.fcmTokenDevice.slice(-12)}
-            </Text>
-          </TouchableOpacity>
-        </Drawer>
-      )}
-    />
+            <TouchableOpacity
+              onPress={() => handlePressDevice(item)}
+              onLongPress={() => onUpdateDevice(item)}
+              style={{
+                padding: 12,
+                borderBottomWidth: 1,
+                borderBlockColor: Colors.grey30,
+              }}>
+              <Text text70 white>
+                {item.deviceName}
+              </Text>
+              <Text text70 white>
+                {item.fcmTokenDevice.slice(-12)}
+              </Text>
+            </TouchableOpacity>
+          </Drawer>
+        )}
+      />
+    </>
   );
 };
 

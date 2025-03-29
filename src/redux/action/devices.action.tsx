@@ -103,7 +103,7 @@ export const updateDevice = createAsyncThunk(
         fcmToken: data.fcmToken,
       };
       const response = await instance.put(
-        `/devices/update-device/${data.deviceId}`,
+        `/devices/update-device/${data.id}`,
         body,
       );
       return response.data;

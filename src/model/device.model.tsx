@@ -14,8 +14,3 @@ export interface AddDeviceParam {
   deviceName?: string;
   fcmTokenDevice: string;
 }
-
-export interface UpdateDeviceParam extends DeviceModel {
-  fcmToken?: string;
-  deviceId: string;
-}

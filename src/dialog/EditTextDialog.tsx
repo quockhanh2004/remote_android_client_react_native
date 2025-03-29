@@ -1,14 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Colors, Dialog, Typography, View} from 'react-native-ui-lib';
+import {
+  Colors,
+  Dialog,
+  Icon,
+  TouchableOpacity,
+  Typography,
+  View,
+} from 'react-native-ui-lib';
 import React, {useEffect, useState} from 'react';
 import CustomDialog from './CustomDialog';
 import MainButton from '../components/MainButton';
 import MainInput from '../components/MainInput';
+import {navigationTo} from '../screens/HomeScreen';
+import {nav} from '../navigation/navName';
 
 interface EditTextDialogProps {
   value: string;
   value2?: string;
-  visible: boolean;
+  visible: any;
   onDismiss: () => void;
   label: string;
   isLoading: boolean;
@@ -16,6 +25,8 @@ interface EditTextDialogProps {
   isEditName?: boolean;
   placeholder?: string;
   placeholder2?: string;
+  isUpdate?: boolean;
+  onScanQR?: any;
 }
 
 const EditTextDialog = ({
@@ -28,6 +39,8 @@ const EditTextDialog = ({
   onConfirm,
   placeholder,
   placeholder2,
+  isUpdate,
+  onScanQR,
 }: EditTextDialogProps) => {
   const [text, setText] = useState<string>(value);
   const [text2, setText2] = useState<string>(value2 || '');
@@ -74,6 +87,25 @@ const EditTextDialog = ({
           onChangeText={setText2}
           placeholder={placeholder2}
           placeholderTextColor={Colors.grey40}
+          renderRight={
+            isUpdate && (
+              <TouchableOpacity
+                onPress={
+                  onScanQR
+                    ? onScanQR
+                    : () => {
+                        navigationTo(nav.addDevice, {isUpdate: true});
+                      }
+                }>
+                <Icon
+                  assetGroup="icons"
+                  assetName="ic_qr"
+                  size={24}
+                  tintColor={Colors.grey40}
+                />
+              </TouchableOpacity>
+            )
+          }
         />
         <MainButton
           label={'Add'}
