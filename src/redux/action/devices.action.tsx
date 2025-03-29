@@ -4,7 +4,7 @@ import {setMessage} from '../slice/message.slice';
 import {
   AddDeviceParam,
   CommandParam,
-  UpdateDeviceParam,
+  DeviceModel,
 } from '../../model/device.model';
 
 export const executeCommand = createAsyncThunk(
@@ -96,16 +96,18 @@ export const removeDevice = createAsyncThunk(
 
 export const updateDevice = createAsyncThunk(
   'updateDevice',
-  async (data: UpdateDeviceParam, thunkApi) => {
+  async (data: DeviceModel, thunkApi) => {
     try {
       const body = {
         deviceName: data.deviceName,
-        fcmToken: data.fcmToken,
+        fcmTokenDevice: data.fcmTokenDevice,
       };
       const response = await instance.put(
         `/devices/update-device/${data.id}`,
         body,
       );
+      console.log(response.data);
+
       return response.data;
     } catch (error: any) {
       thunkApi.dispatch(

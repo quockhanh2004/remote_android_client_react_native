@@ -102,13 +102,14 @@ const EditTextDialog = ({
                   assetName="ic_qr"
                   size={24}
                   tintColor={Colors.grey40}
+                  marginR-8
                 />
               </TouchableOpacity>
             )
           }
         />
         <MainButton
-          label={'Add'}
+          label={isUpdate ? 'Update' : 'Add'}
           onPress={() => {
             onConfirm(text, text2);
           }}
