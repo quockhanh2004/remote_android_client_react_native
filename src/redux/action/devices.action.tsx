@@ -15,12 +15,6 @@ export const executeCommand = createAsyncThunk(
         '/devices/send-command-to-device',
         data,
       );
-      // thunkApi.dispatch(
-      //   setMessage({
-      //     type: 'success',
-      //     message: 'Gửi yêu cầu thành công',
-      //   }),
-      // );
       if (response.data) {
         return 'Gửi yêu cầu thành công';
       }

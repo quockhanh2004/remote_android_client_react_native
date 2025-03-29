@@ -10,11 +10,13 @@ import {
 interface InitalState {
   devices: Array<DeviceModel>;
   isLoading: boolean;
+  defaultDevice: DeviceModel | null | undefined;
 }
 
 const initialState: InitalState = {
   devices: [],
   isLoading: false,
+  defaultDevice: null,
 };
 
 const deviceSlice = createSlice({
@@ -24,6 +26,10 @@ const deviceSlice = createSlice({
     clearStatus: state => {
       state.devices = [];
       state.isLoading = false;
+    },
+
+    setDefaultDevice: (state, action: {payload: DeviceModel | null}) => {
+      state.defaultDevice = action.payload;
     },
   },
   extraReducers: builder =>
@@ -99,6 +105,6 @@ const deviceSlice = createSlice({
       }),
 });
 
-export const {clearStatus} = deviceSlice.actions;
+export const {clearStatus, setDefaultDevice} = deviceSlice.actions;
 
 export default deviceSlice.reducer;

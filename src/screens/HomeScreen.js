@@ -21,7 +21,9 @@ const HomeScreen = () => {
   const route = useRoute();
   const dispatch = useDispatch();
 
-  const {devices, isLoading} = useSelector(state => state.devices);
+  const {devices, isLoading, defaultDevice} = useSelector(
+    state => state.devices,
+  );
 
   const [dataAdd, setDataAdd] = useState(null);
   const handleReload = () => {
@@ -53,6 +55,9 @@ const HomeScreen = () => {
   useEffect(() => {
     dispatch(getListDevices());
     handleRegisToken();
+    if (defaultDevice) {
+      navigationTo(nav.deviceDetail, {device: defaultDevice});
+    }
   }, []);
 
   useEffect(() => {
