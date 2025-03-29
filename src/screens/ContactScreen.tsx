@@ -117,6 +117,10 @@ const ContactList: React.FC = () => {
   };
 
   const handleDialPress = (num: string) => {
+    if (num === '#') {
+      setDialNumber(prev => prev + '%23');
+      return;
+    }
     setDialNumber(prev => prev + num);
   };
 
