@@ -149,6 +149,7 @@ const HomeScreen = () => {
               deviceName: text,
               fcmTokenDevice: text2 ? text2 : '',
             });
+            setVisibleUpdateDevice(false):
             setUpdateDevice(null);
           }
         }}
