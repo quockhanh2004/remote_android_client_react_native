@@ -22,5 +22,6 @@ export const AssetsInit = () => {
     ic_next_track: require('../assets/icons/ic_next_track.png'),
     ic_prev_track: require('../assets/icons/ic_prev_track.png'),
     ic_qr: require('../assets/icons/ic_qr.png'),
+    ic_spotify: require('../assets/icons/ic_spotify.png'),
   });
 };

@@ -4,14 +4,16 @@ import {View, Text, Button} from 'react-native-ui-lib';
 import {useSelector, useDispatch} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
 import {clearMessaging} from '../redux/slice/messaging.slice';
+import {AppDispatch, RootState} from '../redux/store';
 
 const LogScreen = () => {
-  const route = useRoute();
-  const dispatch = useDispatch();
+  const route = useRoute<any>();
+  const dispatch = useDispatch<AppDispatch>();
   const {deviceId, deviceName} = route.params;
-  const flatListRef = useRef(null);
+  const flatListRef = useRef<any>(null);
 
-  const messaging = useSelector(state => state.messaging.messaging) || [];
+  const messaging =
+    useSelector((state: RootState) => state.messaging.messaging) || [];
 
   // Lọc tin nhắn theo deviceId và sắp xếp theo thời gian từ cũ đến mới
   const filteredMessages = messaging
@@ -29,13 +31,12 @@ const LogScreen = () => {
 
   return (
     <View flex padding-16 backgroundColor="#121212">
-      {/* Header */}
       <View row spread marginB-10>
         <Text text60 color="white">
-          Log của thiết bị: {deviceName}
+          Log of device: {deviceName}
         </Text>
         <Button
-          label="Xóa Log"
+          label="Clear Log"
           onPress={() => dispatch(clearMessaging(deviceId))}
           backgroundColor="red"
         />
@@ -43,7 +44,7 @@ const LogScreen = () => {
 
       {filteredMessages.length === 0 ? (
         <Text text70 color="gray">
-          Không có log nào.
+          Nothing here.
         </Text>
       ) : (
         <FlatList

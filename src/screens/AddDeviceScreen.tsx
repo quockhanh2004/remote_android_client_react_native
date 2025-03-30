@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Text} from 'react-native-ui-lib';
-import {View} from 'react-native';
+import {Text, View} from 'react-native-ui-lib';
 import React, {useRef} from 'react';
 import {
   Camera,
@@ -13,9 +12,9 @@ import {useRoute} from '@react-navigation/native';
 
 const AddDeviceScreen = () => {
   const camera = useRef(null);
-  const route = useRoute();
-  const {isUpdate} = route.params;
-  const devices = useCameraDevices('wide-angle-camera');
+  const route = useRoute<any>();
+  const isUpdate = route.params?.isUpdate;
+  const devices = useCameraDevices();
   const device = devices[0];
 
   const codeScanner = useCodeScanner({
@@ -34,32 +33,18 @@ const AddDeviceScreen = () => {
   });
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'black',
-        gap: 12,
-      }}>
-      <Text color="white" size={24} marginT-20 text60BL>
+    <View flex gap-12 center bg-black useSafeArea>
+      <Text color="white" marginT-20 text60BL>
         Quét QR FCM Token của thiết bị
       </Text>
       <Camera
         ref={camera}
-        style={{width: 300, height: 300}}
+        style={{width: 300, height: 300, position: 'relative'}}
         preview={true}
         isActive={true}
         resizeMode="cover"
-        captureAudio={true}
         device={device}
         codeScanner={codeScanner}
-        androidCameraPermissionOptions={{
-          title: 'Permission to use camera',
-          message: 'We need your permission to use your camera',
-          buttonPositive: 'Okay',
-          buttonNegative: 'Cancel',
-        }}
       />
     </View>
   );

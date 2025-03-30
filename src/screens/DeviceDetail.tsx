@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import {useNavigation, useRoute} from '@react-navigation/native';
-import React from 'react';
+import {useRoute} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {View, Text, Card, Icon, Colors, Button} from 'react-native-ui-lib';
 import {useDispatch, useSelector} from 'react-redux';
 import {executeCommand} from '../redux/action/devices.action';
@@ -8,15 +8,22 @@ import {Command} from '../utils/Command';
 import {nav} from '../navigation/navName';
 import {navigationTo} from './HomeScreen';
 import {ScrollView} from 'react-native';
+import EditTextDialog from '../dialog/EditTextDialog';
+import {AppDispatch, RootState} from '../redux/store';
 
 const DeviceDetail = () => {
-  const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const {isLoading} = useSelector(state => state.devices);
-  const route = useRoute();
+  const dispatch = useDispatch<AppDispatch>();
+  const {isLoading} = useSelector((state: RootState) => state.devices);
+  const route = useRoute<any>();
   const device = route.params?.device;
 
-  const handleExecuteCommand = command => {
+  const [visibleSpotifyLink, setVisibleSpotifyLink] = useState(false);
+
+  const handleConfirmPlaySpotify = (link: string) => {
+    handleExecuteCommand(Command.start_intent + link);
+  };
+
+  const handleExecuteCommand = (command: string) => {
     dispatch(executeCommand({command, deviceId: device.id}));
   };
 
@@ -40,7 +47,7 @@ const DeviceDetail = () => {
           </Text>
         </View>
         <Button
-          label="xem log"
+          label="View Log"
           size={'medium'}
           onPress={() => {
             navigationTo(nav.log, {
@@ -48,12 +55,14 @@ const DeviceDetail = () => {
               deviceName: device.deviceName,
             });
           }}
+          bg-blue40
         />
       </View>
 
       <View marginT-20>
         <Button
-          label="Nhập lệnh thủ công"
+          label="Type Commands"
+          bg-red20
           onPress={() => {
             navigationTo(nav.command, {deviceId: device.id});
           }}
@@ -78,8 +87,11 @@ const DeviceDetail = () => {
                 backgroundColor={item.backgroundColor || '#1E88E5'}
                 onPress={() => {
                   if (item.screen) {
-                    navigation.navigate(item.screen, {deviceId: device.id});
-                  } else {
+                    navigationTo(item.screen, {deviceId: device.id});
+                  }
+                  if (item.dialog) {
+                    setVisibleSpotifyLink(true);
+                  } else if (item.command) {
                     handleExecuteCommand(item.command);
                   }
                 }}
@@ -112,19 +124,46 @@ const DeviceDetail = () => {
           </View>
         </ScrollView>
       </View>
+      <EditTextDialog
+        hideText2={true}
+        visible={visibleSpotifyLink}
+        onDismiss={() => {
+          setVisibleSpotifyLink(false);
+        }}
+        label="Link Spotify"
+        placeholder="Paste link Spotify"
+        onConfirm={handleConfirmPlaySpotify}
+        customTextButton="Play"
+        isLoading={false}
+      />
     </View>
   );
 };
 
 export default DeviceDetail;
 const commands = [
+  {
+    label: 'Spotify',
+    icon: 'ic_spotify',
+    backgroundColor: '#1ed760',
+    dialog: 'Spotify',
+  },
   {label: 'Mute', command: Command.mute_toggle, icon: 'ic_mute'},
   {label: 'Volume Down', command: Command.volume_down, icon: 'ic_volume_down'},
   {label: 'Volume Up', command: Command.volume_up, icon: 'ic_volume_up'},
-  {label: 'Previous Track', command: Command.prev_track, icon: 'ic_prev_track'},
+  {
+    label: 'Previous Track',
+    command: Command.previous_track,
+    icon: 'ic_prev_track',
+  },
   {label: 'Play/Pause', command: Command.play_pause, icon: 'ic_play_pause'},
   {label: 'Next Track', command: Command.next_track, icon: 'ic_next_track'},
-  {label: 'Stop', command: Command.stop_music, icon: 'ic_stop'},
+  {
+    label: 'Stop',
+    command: Command.stop_music,
+    icon: 'ic_stop',
+    backgroundColor: Colors.red40,
+  },
 
   {
     label: 'Flash On',
@@ -144,7 +183,7 @@ const commands = [
     icon: 'ic_hotspot',
     backgroundColor: Colors.green40,
   },
-  {label: 'Call', screen: nav.contact, icon: 'ic_contact'},
+  {label: 'Contact', screen: nav.contact, icon: 'ic_contact'},
   {
     label: 'End Call',
     command: Command.end_call,

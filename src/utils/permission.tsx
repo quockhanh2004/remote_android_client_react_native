@@ -4,7 +4,6 @@ import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 export const requestCameraPermission = async (): Promise<boolean> => {
   try {
     if (Platform.OS === 'android') {
-      // Yêu cầu quyền cho Android
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
@@ -16,23 +15,15 @@ export const requestCameraPermission = async (): Promise<boolean> => {
         },
       );
 
-      const micro = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      );
-
       console.log('sdk: ' + Platform.Version);
 
-      if (
-        granted === PermissionsAndroid.RESULTS.GRANTED &&
-        micro === PermissionsAndroid.RESULTS.GRANTED
-      ) {
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         return true;
       } else {
         console.log('Camera permission denied');
         return false;
       }
     } else if (Platform.OS === 'ios') {
-      // Yêu cầu quyền cho iOS
       const cameraStatus = await check(PERMISSIONS.IOS.CAMERA);
 
       if (cameraStatus === RESULTS.GRANTED) {

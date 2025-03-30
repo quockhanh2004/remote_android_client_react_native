@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState, forwardRef} from 'react';
 
-import {TextInput, StyleSheet, Pressable} from 'react-native';
+import {TextInput, StyleSheet, Pressable, DimensionValue} from 'react-native';
 import {Colors, View, Icon, Typography, Card, Image} from 'react-native-ui-lib';
 
 interface InputViewProps {
@@ -42,7 +42,49 @@ interface InputViewProps {
   description?: string;
   defaultValue?: string;
   onBlur?: () => void;
-  textContentType?: string;
+  textContentType?:
+    | 'none'
+    | 'URL'
+    | 'addressCity'
+    | 'addressCityAndState'
+    | 'addressState'
+    | 'countryName'
+    | 'creditCardNumber'
+    | 'creditCardExpiration'
+    | 'creditCardExpirationMonth'
+    | 'creditCardExpirationYear'
+    | 'creditCardSecurityCode'
+    | 'creditCardType'
+    | 'creditCardName'
+    | 'creditCardGivenName'
+    | 'creditCardMiddleName'
+    | 'creditCardFamilyName'
+    | 'emailAddress'
+    | 'familyName'
+    | 'fullStreetAddress'
+    | 'givenName'
+    | 'jobTitle'
+    | 'location'
+    | 'middleName'
+    | 'name'
+    | 'namePrefix'
+    | 'nameSuffix'
+    | 'nickname'
+    | 'organizationName'
+    | 'postalCode'
+    | 'streetAddressLine1'
+    | 'streetAddressLine2'
+    | 'sublocality'
+    | 'telephoneNumber'
+    | 'username'
+    | 'password'
+    | 'newPassword'
+    | 'oneTimeCode'
+    | 'birthdate'
+    | 'birthdateDay'
+    | 'birthdateMonth'
+    | 'birthdateYear'
+    | undefined;
   disabled?: boolean;
   title?: string;
   required?: boolean;
@@ -58,7 +100,7 @@ interface InputViewProps {
   enableShadow?: boolean;
   borderWidth?: number;
   onKeyPress?: (event: any) => void;
-  width?: string | number;
+  width?: DimensionValue | undefined;
 }
 
 const InputView = forwardRef<TextInput, InputViewProps>(
@@ -111,12 +153,12 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       enableShadow,
       borderWidth,
       onKeyPress,
+      width,
       ...props
     },
     inputRef: any,
   ) => {
     const [showPassword, setShowPassword] = useState(eyePassword);
-    // const [isFocus, setIsFocus] = useState(false);
 
     const toggleEye = () => setShowPassword(p => !p);
 
@@ -124,16 +166,6 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       inputRef?.current?.clear?.();
       onChangeText?.('');
     };
-
-    // const handleFocus = () => {
-    //   setIsFocus(true);
-    //   onFocus?.(true);
-    // };
-
-    // const handleBlur = () => {
-    //   setIsFocus(false);
-    //   onBlur?.();
-    // };
 
     const renderLeftComponent = () =>
       !!iconLeft && (
@@ -164,18 +196,6 @@ const InputView = forwardRef<TextInput, InputViewProps>(
       );
 
     return (
-      // <WrapInput
-      //   title={title}
-      //   withColon={withColon}
-      //   required={required}
-      //   error={error}
-      //   description={description}
-      //   isFocus={isFocus}
-      //   enableShadow={enableShadow}
-      //   {...props}>
-
-      // </WrapInput>
-      // </View>
       <View style={{borderRadius: 12, maxHeight: maxHeight}}>
         <Card
           flex={flex}
@@ -191,7 +211,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
           borderColor={borderColor}
           borderWidth={borderWidth}
           borderRadius={radius}
-          width={props.width}>
+          width={width}>
           {renderLeft || renderLeftComponent()}
           <TextInput
             ref={inputRef}
@@ -246,7 +266,7 @@ const InputView = forwardRef<TextInput, InputViewProps>(
               />
             </Pressable>
           )}
-          {!!error && <Icon normal assetName={'error'} marginR-12 />}
+          {!!error && <Icon assetName={'error'} marginR-12 />}
           {renderRight || renderRightComponent()}
         </Card>
       </View>

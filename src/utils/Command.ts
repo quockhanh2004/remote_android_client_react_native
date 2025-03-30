@@ -18,4 +18,5 @@ export const Command = {
   footer_sms: ' --ez exit_on_sent true', //end command send sms
   get_list_app: 'cmd package list packages',
   launch_app: 'am start -n ', //+ pacakage name
+  start_intent: 'am start -a android.intent.action.VIEW -d ',
 };

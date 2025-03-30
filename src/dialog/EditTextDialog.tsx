@@ -15,22 +15,23 @@ import {navigationTo} from '../screens/HomeScreen';
 import {nav} from '../navigation/navName';
 
 interface EditTextDialogProps {
-  value: string;
+  value?: string;
   value2?: string;
   visible: any;
   onDismiss: () => void;
   label: string;
   isLoading: boolean;
-  onConfirm: (text: string, text2?: string) => void;
-  isEditName?: boolean;
+  onConfirm: (text: string, text2: string) => Promise<void | any> | void;
   placeholder?: string;
   placeholder2?: string;
   isUpdate?: boolean;
   onScanQR?: any;
+  hideText2?: boolean;
+  customTextButton?: string;
 }
 
 const EditTextDialog = ({
-  value,
+  value = '',
   value2 = '',
   visible,
   onDismiss,
@@ -41,8 +42,10 @@ const EditTextDialog = ({
   placeholder2,
   isUpdate,
   onScanQR,
+  hideText2,
+  customTextButton,
 }: EditTextDialogProps) => {
-  const [text, setText] = useState<string>(value);
+  const [text, setText] = useState<string>(value || '');
   const [text2, setText2] = useState<string>(value2 || '');
 
   useEffect(() => {
@@ -82,34 +85,38 @@ const EditTextDialog = ({
           placeholder={placeholder}
           placeholderTextColor={Colors.grey40}
         />
-        <MainInput
-          value={text2}
-          onChangeText={setText2}
-          placeholder={placeholder2}
-          placeholderTextColor={Colors.grey40}
-          renderRight={
-            isUpdate && (
-              <TouchableOpacity
-                onPress={
-                  onScanQR
-                    ? onScanQR
-                    : () => {
-                        navigationTo(nav.addDevice, {isUpdate: true});
-                      }
-                }>
-                <Icon
-                  assetGroup="icons"
-                  assetName="ic_qr"
-                  size={24}
-                  tintColor={Colors.grey40}
-                  marginR-8
-                />
-              </TouchableOpacity>
-            )
-          }
-        />
+        {!hideText2 && (
+          <MainInput
+            value={text2}
+            onChangeText={setText2}
+            placeholder={placeholder2}
+            placeholderTextColor={Colors.grey40}
+            renderRight={
+              isUpdate && (
+                <TouchableOpacity
+                  onPress={
+                    onScanQR
+                      ? onScanQR
+                      : () => {
+                          navigationTo(nav.addDevice, {isUpdate: true});
+                        }
+                  }>
+                  <Icon
+                    assetGroup="icons"
+                    assetName="ic_qr"
+                    size={24}
+                    tintColor={Colors.grey40}
+                    marginR-12
+                  />
+                </TouchableOpacity>
+              )
+            }
+          />
+        )}
         <MainButton
-          label={isUpdate ? 'Update' : 'Add'}
+          label={
+            customTextButton ? customTextButton : isUpdate ? 'Update' : 'Add'
+          }
           onPress={() => {
             onConfirm(text, text2);
           }}

@@ -10,26 +10,34 @@ import {
 } from '../redux/action/devices.action';
 import DeviceList from './DeviceList';
 import MainButton from '../components/MainButton';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {nav} from '../navigation/navName';
 import {requestCameraPermission} from '../utils/permission';
 import EditTextDialog from '../dialog/EditTextDialog';
 import {getFcmToken} from '../services/Notification';
+import {AppDispatch, RootState} from '../redux/store';
+import {DeviceModel} from '../model/device.model';
 
-let navigation;
+let navigation: NavigationProp<any>;
 const HomeScreen = () => {
-  navigation = useNavigation();
-  const route = useRoute();
-  const dispatch = useDispatch();
+  navigation = useNavigation<any>();
+  const route = useRoute<any>();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [localUpdateDevice, setUpdateDevice] = useState(null);
+  const [localUpdateDevice, setUpdateDevice] = useState<DeviceModel | any>(
+    null,
+  );
   const [visibleUpdateDevice, setVisibleUpdateDevice] = useState(false);
 
   const {devices, isLoading, defaultDevice} = useSelector(
-    state => state.devices,
+    (state: RootState) => state.devices,
   );
 
-  const [dataAdd, setDataAdd] = useState(null);
+  const [dataAdd, setDataAdd] = useState<DeviceModel | any>(null);
   const handleReload = () => {
     dispatch(getListDevices());
   };
@@ -39,7 +47,7 @@ const HomeScreen = () => {
     navigationTo(nav.addDevice);
   };
 
-  const handleRequestAddDevice = async (name, token) => {
+  const handleRequestAddDevice = async (name: string, token: string) => {
     dispatch(
       addDevice({
         deviceName: name,
@@ -57,7 +65,7 @@ const HomeScreen = () => {
     }
   };
 
-  const handleUpdateDevice = device => {
+  const handleUpdateDevice = (device: DeviceModel) => {
     dispatch(updateDevice(device));
   };
 
@@ -84,7 +92,7 @@ const HomeScreen = () => {
       }
 
       if (route.params.data !== undefined) {
-        navigation.setParams({data: undefined});
+        navigation.setParams(undefined);
       }
     }
   }, [route.params]);
@@ -116,10 +124,15 @@ const HomeScreen = () => {
       <EditTextDialog
         visible={dataAdd}
         value=""
-        value2={dataAdd?.token}
+        value2={dataAdd?.token || ''}
         placeholder="Device name"
         placeholder2="Token device"
         onConfirm={handleRequestAddDevice}
+        onDismiss={() => {
+          setDataAdd(null);
+        }}
+        label={''}
+        isLoading={false}
       />
       <EditTextDialog
         visible={visibleUpdateDevice}
@@ -149,7 +162,6 @@ const HomeScreen = () => {
               deviceName: text,
               fcmTokenDevice: text2 ? text2 : '',
             });
-            setVisibleUpdateDevice(false);
             setUpdateDevice(null);
           }
         }}
@@ -159,7 +171,7 @@ const HomeScreen = () => {
 };
 
 // Hàm điều hướng toàn cục
-export const navigationTo = (to, data) => {
+export const navigationTo = (to: string, data?: any) => {
   if (navigation) {
     navigation.navigate(to, data);
   } else {
