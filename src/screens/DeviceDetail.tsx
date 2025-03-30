@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useRoute} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, Card, Icon, Colors, Button} from 'react-native-ui-lib';
 import {useDispatch, useSelector} from 'react-redux';
 import {executeCommand} from '../redux/action/devices.action';
@@ -14,6 +14,7 @@ import {AppDispatch, RootState} from '../redux/store';
 const DeviceDetail = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {isLoading} = useSelector((state: RootState) => state.devices);
+  const {battery} = useSelector((state: RootState) => state.messaging);
   const route = useRoute<any>();
   const device = route.params?.device;
 
@@ -23,9 +24,16 @@ const DeviceDetail = () => {
     handleExecuteCommand(Command.start_intent + link);
   };
 
-  const handleExecuteCommand = (command: string) => {
-    dispatch(executeCommand({command, deviceId: device.id}));
-  };
+  const handleExecuteCommand = useCallback(
+    (command: string) => {
+      dispatch(executeCommand({command, deviceId: device.id}));
+    },
+    [device.id, dispatch],
+  );
+
+  useEffect(() => {
+    handleExecuteCommand('dumpsys battery | grep level');
+  }, [device.id, handleExecuteCommand]);
 
   if (!device) {
     return (
@@ -42,8 +50,11 @@ const DeviceDetail = () => {
           <Text text60 white marginB-12>
             {device.deviceName}
           </Text>
-          <Text text70 white marginB-20>
+          <Text text70 white>
             Token: {device.fcmTokenDevice.slice(-12)}
+          </Text>
+          <Text text70 white marginB-20>
+            Battery: {battery}%
           </Text>
         </View>
         <Button

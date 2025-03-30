@@ -9,12 +9,14 @@ interface DataMessaging {
 
 interface TypeMessageSlice {
   messaging: DataMessaging[];
+  battery: string;
 }
 
 const messagingSlice = createSlice({
   name: 'messaging',
   initialState: {
     messaging: [],
+    battery: 'unknown',
   } as TypeMessageSlice,
 
   reducers: {
@@ -24,7 +26,11 @@ const messagingSlice = createSlice({
         timeStamp: Date.now(),
       };
 
-      state.messaging.push(data);
+      if (action.payload.message.response?.startsWith('level: ')) {
+        state.battery = action.payload.message.response.split(': ')[1];
+      } else {
+        state.messaging.push(data);
+      }
       if (state.messaging.length > 50) {
         state.messaging.shift();
       }
