@@ -1,7 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text, Card, Icon, Colors, Button} from 'react-native-ui-lib';
+import {
+  View,
+  Text,
+  Card,
+  Icon,
+  Colors,
+  Button,
+  TouchableOpacity,
+} from 'react-native-ui-lib';
 import {useDispatch, useSelector} from 'react-redux';
 import {executeCommand} from '../redux/action/devices.action';
 import {Command} from '../utils/Command';
@@ -53,9 +61,14 @@ const DeviceDetail = () => {
           <Text text70 white>
             Token: {device.fcmTokenDevice.slice(-12)}
           </Text>
-          <Text text70 white marginB-20>
-            Battery: {battery}%
-          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              handleExecuteCommand('dumpsys battery | grep level');
+            }}>
+            <Text text70 white marginB-20>
+              Battery: {battery}%
+            </Text>
+          </TouchableOpacity>
         </View>
         <Button
           label="View Log"
@@ -67,6 +80,7 @@ const DeviceDetail = () => {
             });
           }}
           bg-blue40
+          marginV-12
         />
       </View>
 
