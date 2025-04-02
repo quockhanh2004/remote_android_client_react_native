@@ -30,6 +30,7 @@ const DeviceDetail = () => {
 
   const handleConfirmPlaySpotify = (link: string) => {
     handleExecuteCommand(Command.start_intent + link);
+    setVisibleSpotifyLink(false);
   };
 
   const handleExecuteCommand = useCallback(
