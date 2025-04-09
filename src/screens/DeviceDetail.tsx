@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -12,24 +13,34 @@ import {
 } from 'react-native-ui-lib';
 import {useDispatch, useSelector} from 'react-redux';
 import {executeCommand} from '../redux/action/devices.action';
-import {Command} from '../utils/Command';
+import {COMMAND} from '../utils/Command';
 import {nav} from '../navigation/navName';
 import {navigationTo} from './HomeScreen';
 import {ScrollView} from 'react-native';
 import EditTextDialog from '../dialog/EditTextDialog';
 import {AppDispatch, RootState} from '../redux/store';
 
+interface ActionButton {
+  label: string;
+  command?: string;
+  icon: string;
+  backgroundColor?: string;
+  screen?: string;
+  dialog?: string;
+}
+
 const DeviceDetail = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {isLoading} = useSelector((state: RootState) => state.devices);
-  const {battery} = useSelector((state: RootState) => state.messaging);
+  const {battery, flash} = useSelector((state: RootState) => state.messaging);
   const route = useRoute<any>();
   const device = route.params?.device;
 
   const [visibleSpotifyLink, setVisibleSpotifyLink] = useState(false);
+  const [listAction, setListAction] = useState<ActionButton[]>([]);
 
   const handleConfirmPlaySpotify = (link: string) => {
-    handleExecuteCommand(Command.start_intent + link);
+    handleExecuteCommand(COMMAND.start_intent + link);
     setVisibleSpotifyLink(false);
   };
 
@@ -41,8 +52,33 @@ const DeviceDetail = () => {
   );
 
   useEffect(() => {
+    // Tìm danh sách hành động điều khiển flash phù hợp
+    let findFlash;
+
+    if (flash) {
+      findFlash = flashs.find(item => item.command === COMMAND.turn_off_flash);
+    } else {
+      findFlash = flashs.find(item => item.command === COMMAND.turn_on_flash);
+    }
+
+    // Nếu không tìm thấy thì fallback bằng cách tạo thủ công
+    if (!findFlash) {
+      findFlash = {
+        label: flash ? 'Flash Off' : 'Flash On',
+        command: flash ? COMMAND.turn_off_flash : COMMAND.turn_on_flash,
+        icon: 'ic_flash',
+        backgroundColor: Colors.yellow20,
+      };
+    }
+
+    // Tạo danh sách hành động mới
+    const flashCommand = [findFlash];
+    setListAction([...flashCommand, ...commands]);
+  }, [flash, device.id]);
+
+  useEffect(() => {
     handleExecuteCommand('dumpsys battery | grep level');
-  }, [device.id, handleExecuteCommand]);
+  }, [device.id]);
 
   if (!device) {
     return (
@@ -105,7 +141,7 @@ const DeviceDetail = () => {
               justifyContent: 'center',
               alignItems: 'flex-end', // Đẩy các item xuống dưới
             }}>
-            {commands.map((item, index) => (
+            {listAction.map((item, index) => (
               <Card
                 key={index}
                 margin-8
@@ -171,50 +207,88 @@ const commands = [
   {
     label: 'Spotify',
     icon: 'ic_spotify',
-    backgroundColor: '#1ed760',
+    backgroundColor: '#1ed760', // màu gốc Spotify
     dialog: 'Spotify',
-  },
-  {label: 'Mute', command: Command.mute_toggle, icon: 'ic_mute'},
-  {label: 'Volume Down', command: Command.volume_down, icon: 'ic_volume_down'},
-  {label: 'Volume Up', command: Command.volume_up, icon: 'ic_volume_up'},
-  {
-    label: 'Previous Track',
-    command: Command.previous_track,
-    icon: 'ic_prev_track',
-  },
-  {label: 'Play/Pause', command: Command.play_pause, icon: 'ic_play_pause'},
-  {label: 'Next Track', command: Command.next_track, icon: 'ic_next_track'},
-  {
-    label: 'Stop',
-    command: Command.stop_music,
-    icon: 'ic_stop',
-    backgroundColor: Colors.red40,
-  },
-
-  {
-    label: 'Flash On',
-    command: Command.turn_on_flash,
-    icon: 'ic_flash',
-    backgroundColor: Colors.yellow20,
-  },
-  {
-    label: 'Flash Off',
-    command: Command.turn_off_flash,
-    icon: 'ic_flash_off',
-    backgroundColor: Colors.grey30,
   },
   {
     label: 'Hotspot On',
-    command: Command.enable_hotspot,
+    command: COMMAND.enable_hotspot,
     icon: 'ic_hotspot',
-    backgroundColor: Colors.green40,
+    backgroundColor: Colors.orange30, // đổi sang cam nhẹ, dễ nhận
   },
-  {label: 'Contact', screen: nav.contact, icon: 'ic_contact'},
   {
-    label: 'End Call',
-    command: Command.end_call,
-    icon: 'ic_deny_call',
+    label: 'Mute',
+    command: COMMAND.mute_toggle,
+    icon: 'ic_mute',
+    backgroundColor: Colors.grey30,
+  },
+  {
+    label: 'Volume Down',
+    command: COMMAND.volume_down,
+    icon: 'ic_volume_down',
+    backgroundColor: Colors.blue60,
+  },
+  {
+    label: 'Volume Up',
+    command: COMMAND.volume_up,
+    icon: 'ic_volume_up',
+    backgroundColor: Colors.blue40,
+  },
+  {
+    label: 'Previous Track',
+    command: COMMAND.previous_track,
+    icon: 'ic_prev_track',
+    backgroundColor: Colors.violet30,
+  },
+  {
+    label: 'Play/Pause',
+    command: COMMAND.play_pause,
+    icon: 'ic_play_pause',
+    backgroundColor: Colors.violet50,
+  },
+  {
+    label: 'Next Track',
+    command: COMMAND.next_track,
+    icon: 'ic_next_track',
+    backgroundColor: Colors.violet30,
+  },
+  {
+    label: 'Stop',
+    command: COMMAND.stop_music,
+    icon: 'ic_stop',
     backgroundColor: Colors.red40,
   },
-  {label: 'Accept Call', command: Command.accept_call, icon: 'ic_call'},
+  {
+    label: 'Contact',
+    screen: nav.contact,
+    icon: 'ic_contact',
+    backgroundColor: Colors.blue20,
+  },
+  {
+    label: 'End Call',
+    command: COMMAND.end_call,
+    icon: 'ic_deny_call',
+    backgroundColor: Colors.red50,
+  },
+  {
+    label: 'Accept Call',
+    command: COMMAND.accept_call,
+    icon: 'ic_call',
+    backgroundColor: Colors.green40,
+  },
+];
+
+const flashs = [
+  {
+    label: 'Turn on flash',
+    command: COMMAND.turn_on_flash,
+    icon: 'ic_flash_off',
+    backgroundColor: Colors.grey20, // khi chưa bật
+  },
+  {
+    label: 'Turn off flash',
+    icon: 'ic_flash',
+    command: COMMAND.turn_off_flash,
+    backgroundColor: Colors.yellow30, // khi đã bật
+  },
 ];

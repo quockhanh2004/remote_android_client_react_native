@@ -22,14 +22,14 @@ const sendCommandSlice = createSlice({
   },
   extraReducers: builder =>
     builder
-      .addCase(executeCommand.pending, state => {
+      .addCase(executeCOMMAND.pending, state => {
         state.isLoading = true;
       })
-      .addCase(executeCommand.fulfilled, (state, action) => {
+      .addCase(executeCOMMAND.fulfilled, (state, action) => {
         state.isLoading = false;
         state.sendCommand = action.payload as string;
       })
-      .addCase(executeCommand.rejected, state => {
+      .addCase(executeCOMMAND.rejected, state => {
         state.isLoading = false;
       }),
 });

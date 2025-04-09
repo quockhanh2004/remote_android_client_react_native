@@ -13,7 +13,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../redux/store';
 import {executeCommand} from '../redux/action/devices.action';
-import {Command} from '../utils/Command';
+import {COMMAND} from '../utils/Command';
 import {
   Button,
   FloatingButton,
@@ -110,7 +110,7 @@ const ContactList: React.FC = () => {
     dispatch(
       executeCommand({
         deviceId,
-        command: Command.call_to + phoneNumber,
+        command: COMMAND.call_to + phoneNumber,
       }),
     );
     navigation.goBack();
@@ -137,7 +137,7 @@ const ContactList: React.FC = () => {
       dispatch(
         executeCommand({
           deviceId,
-          command: Command.call_to + dialNumber,
+          command: COMMAND.call_to + dialNumber,
         }),
       );
       navigation.goBack();

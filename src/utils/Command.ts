@@ -1,4 +1,4 @@
-export const Command = {
+export const COMMAND = {
   call_to: 'am start -a android.intent.action.CALL -d tel:', //+ phone number
   accept_call: 'input keyevent KEYCODE_HEADSETHOOK',
   end_call: 'input keyevent KEYCODE_ENDCALL',
@@ -18,5 +18,6 @@ export const Command = {
   footer_sms: ' --ez exit_on_sent true', //end command send sms
   get_list_app: 'cmd package list packages',
   launch_app: 'am start -n ', //+ pacakage name
-  start_intent: 'am start -a android.intent.action.VIEW -d ',
+  start_intent:
+    'input keyevent 224 && am start -a android.intent.action.VIEW -d ',
 };

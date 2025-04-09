@@ -30,7 +30,7 @@ export const NotificationService = () => {
 
   //nhận thông báo trong app với fcm
   onMessage(messaging, remoteMessage => {
-    console.log('Received FCM message: ', JSON.stringify(remoteMessage));
+    // console.log('Received FCM message: ', JSON.stringify(remoteMessage));
     setData(remoteMessage.data);
   });
   const setData = (data: any) => {

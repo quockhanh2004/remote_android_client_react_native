@@ -6,15 +6,26 @@ import {
   CommandParam,
   DeviceModel,
 } from '../../model/device.model';
+import {setBattery, setFlash} from '../slice/messaging.slice';
+import {COMMAND} from '../../utils/Command';
 
 export const executeCommand = createAsyncThunk(
   'sendCommand',
   async (data: CommandParam, thunkApi) => {
     try {
+      if (data.command === 'dumpsys battery | grep level') {
+        thunkApi.dispatch(setBattery('Checking...'));
+      }
+      if (data.command === COMMAND.turn_on_flash) {
+        thunkApi.dispatch(setFlash(true));
+      } else if (data.command === COMMAND.turn_off_flash) {
+        thunkApi.dispatch(setFlash(false));
+      }
       const response = await instance.post(
         '/devices/send-command-to-device',
         data,
       );
+
       if (response.data) {
         return 'Gửi yêu cầu thành công';
       }
